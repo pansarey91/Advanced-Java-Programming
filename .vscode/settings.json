@@ -1,0 +1,13 @@
+{
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.sourcePaths": [
+        "Adv java class",
+        "AWT-Abstract Window Tool Kit",
+        "Collection",
+        "JDBC",
+        "Multithreading",
+        "Practicals",
+        "Servlet"
+    ],
+    "java.project.referencedLibraries": []
+}
