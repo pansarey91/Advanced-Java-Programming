@@ -1,119 +1,95 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
+import java.util.Random;
 
-class Assign2SetB2 extends JFrame implements ActionListener
-{
-    JPanel pnl1,pnl2;
-    JButton b1,b2;
+class Assign2SetB2 extends JFrame implements ActionListener {
+    JPanel pnl1, pnl2;
+    JButton b1, b2;
 
-    Assign2SetB2()
-    {
+    Assign2SetB2() {
         setSize(600, 600);
-        setTitle("Ass5SetB2");
-        setLocation(300,100);
+        setTitle("Bouncing Ball");
+        setLocation(300, 100);
 
         pnl1 = new JPanel();
         pnl1.setBackground(Color.PINK);
-        add(pnl1, "Center");
+        add(pnl1, BorderLayout.CENTER);
 
         b1 = new JButton("Start");
         b2 = new JButton("Close");
 
         pnl2 = new JPanel();
-        pnl2.add(b1);        pnl2.add(b2);
+        pnl2.add(b1);
+        pnl2.add(b2);
+        add(pnl2, BorderLayout.SOUTH);
+
         b1.addActionListener(this);
         b2.addActionListener(this);
-        add(pnl2, "South");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e)
-    {
-        if (e.getSource()==b1)
-        {
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == b1) {
             Ball b = new Ball(pnl1);
             b.start();
-        }
-        if (e.getSource()==b2)
+        } else if (e.getSource() == b2) {
             System.exit(0);
+        }
     }
 
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         new Assign2SetB2();
     }
 }
 
-class Ball extends Thread
-{
+class Ball extends Thread {
     JPanel pnl;
-    int x = 0,y = 0,flg=0;
-    Color c;
+    int x, y = 0, direction = 1; // direction: 1 for down, -1 for up
+    Color color;
 
-    Ball(JPanel pnl)
-    {
+    Ball(JPanel pnl) {
         this.pnl = pnl;
-
-        int rc = randomInteger(0,255);
-        int gc = randomInteger(0,255);
-        int bc = randomInteger(0,255);
-        c = new Color(rc,gc,bc);
-        x = randomInteger(10,550);
+        this.color = randomColor();
+        this.x = randomInteger(10, pnl.getWidth() - 60);
     }
 
-    public int randomInteger(int min, int max)
-    {
+    private Color randomColor() {
         Random rand = new Random();
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-        return randomNum;
+        return new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
     }
 
-    public void draw()
-    {
-        Graphics g = pnl.getGraphics();
-        g.setColor(c);
-        g.fillOval(x, y, 50,50);
+    private int randomInteger(int min, int max) {
+        return new Random().nextInt(max - min + 1) + min;
     }
 
-    void move()
-    {
+    private void moveBall() {
         Graphics g = pnl.getGraphics();
-        g.setXORMode(pnl.getBackground());	// like repaint()
-        g.setColor(c);
-        g.fillOval(x, y, 50,50);
+        g.setColor(color);
+        g.setXORMode(pnl.getBackground()); // Used to clear the previous ball position
 
-        if (flg==0)
-        {
-            y=y+10;
-            if (y==480)
-                flg=1;
-        }
-        else
-        {
-            y=y-10;
-            if (y==0)
-                flg=0;
-        }
+        // Draw and erase the ball
+        g.fillOval(x, y, 50, 50);
 
-        g.fillOval(x, y, 50,50);
+        // Update position
+        y += direction * 10;
+        if (y >= pnl.getHeight() - 60) direction = -1; // Bounce up
+        if (y <= 0) direction = 1; // Bounce down
+
+        g.fillOval(x, y, 50, 50);
         g.dispose();
     }
 
-    public void run()
-    {
-        try
-        {
-            draw();
-            for (;;)
-            {
-                move();
-                sleep(100);
+    public void run() {
+        while (true) {
+            try {
+                moveBall();
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                break;
             }
         }
-        catch (InterruptedException e) {}
     }
 }

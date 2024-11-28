@@ -1,0 +1,20 @@
+web.xml
+
+ <servlet>
+    <servlet-name>Ass4SetA1</servlet-name>
+    <jsp-file>/MyJSP/Ass4SetA1.jsp</jsp-file>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Ass4SetA1</servlet-name>
+    <url-pattern>/Ass4SetA1</url-pattern>
+  </servlet-mapping>
+
+  <context-param>
+      <param-name>city</param-name>
+      <param-value>Baramati</param-value>
+  </context-param>
+  <context-param>
+      <param-name>state</param-name>
+      <param-value>Maharashtra</param-value>
+  </context-param>
